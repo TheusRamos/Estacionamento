@@ -3,7 +3,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
   doc,
@@ -62,4 +64,22 @@ export async function getCurrentUserData() {
 
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+export async function loginWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  const credential = await signInWithPopup(auth, provider);
+  const user = credential.user;
+  const userRef = doc(db, 'usuarios', user.uid);
+  const userDoc = await getDoc(userRef);
+  if (!userDoc.exists()) {
+    await setDoc(userRef, {
+      nome: user.displayName || 'Usuário Google',
+      email: user.email,
+      telefone: '',
+      tipo: 'cliente'
+    });
+    return { uid: user.uid, nome: user.displayName || 'Usuário Google', email: user.email, telefone: '', tipo: 'cliente' };
+  }
+  return { uid: user.uid, ...userDoc.data() };
 }
