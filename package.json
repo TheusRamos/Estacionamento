@@ -1,0 +1,22 @@
+{
+  "name": "estacionamento-app",
+  "version": "1.0.0",
+  "description": "Sistema de gerenciamento de estacionamento",
+  "main": "index.js",
+  "scripts": {
+    "android": "cordova run android",
+    "ios": "cordova run ios",
+    "build": "cordova build",
+    "serve": "cordova serve"
+  },
+  "cordova": {
+    "platforms": ["android", "ios"],
+    "plugins": [
+      "cordova-plugin-camera",
+      "cordova-plugin-geolocation",
+      "cordova-plugin-network-information",
+      "cordova-plugin-statusbar",
+      "cordova-plugin-splashscreen"
+    ]
+  }
+}

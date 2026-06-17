@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Program Files/**)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\www\" -Recurse | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\\", \"\"\\) })"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\mathe\\Documents\\Code\\Estacionamento\\www"
+    ]
+  }
+}
