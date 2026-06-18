@@ -3,7 +3,7 @@ import { ocuparVagaAtomico, updateStatusVaga, STATUS_VAGA } from './vagas.js';
 import { calcularValorSessao } from './tarifas.js';
 import {
   collection, doc, addDoc, getDocs, getDoc, updateDoc,
-  query, where, orderBy, onSnapshot, Timestamp, limit
+  query, where, orderBy, onSnapshot, Timestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const COL = 'sessoes';
@@ -57,47 +57,35 @@ export async function getSessaoEmAndamentoPorPlaca(placa) {
   if (vSnap.empty) return null;
 
   const veiculoId = vSnap.docs[0].id;
-  const q = query(
-    collection(db, COL),
-    where('veiculoId', '==', veiculoId),
-    where('status', '==', STATUS_SESSAO.EM_ANDAMENTO),
-    limit(1)
-  );
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const d = snap.docs[0];
-  return { id: d.id, veiculoId, ...d.data() };
+  const snap = await getDocs(query(collection(db, COL), where('veiculoId', '==', veiculoId)));
+  const ativa = snap.docs
+    .map(d => ({ id: d.id, veiculoId, ...d.data() }))
+    .find(d => d.status === STATUS_SESSAO.EM_ANDAMENTO);
+  return ativa ?? null;
 }
 
 export async function getSessaoAtivaDoUsuario(usuarioId) {
-  const q = query(
-    collection(db, COL),
-    where('usuarioId', '==', usuarioId),
-    where('status', '==', STATUS_SESSAO.EM_ANDAMENTO),
-    limit(1)
-  );
+  const q = query(collection(db, COL), where('usuarioId', '==', usuarioId));
   const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const d = snap.docs[0];
-  return { id: d.id, ...d.data() };
+  const ativa = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .find(d => d.status === STATUS_SESSAO.EM_ANDAMENTO);
+  return ativa ?? null;
 }
 
 export async function getSessoesDoUsuario(usuarioId) {
-  const q = query(
-    collection(db, COL),
-    where('usuarioId', '==', usuarioId),
-    orderBy('entrada', 'desc')
-  );
+  const q = query(collection(db, COL), where('usuarioId', '==', usuarioId));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.entrada?.toMillis?.() ?? 0) - (a.entrada?.toMillis?.() ?? 0));
 }
 
 export async function getAllSessoes(statusFilter) {
-  const q = statusFilter
-    ? query(collection(db, COL), where('status', '==', statusFilter), orderBy('entrada', 'desc'))
-    : query(collection(db, COL), orderBy('entrada', 'desc'));
+  const q = query(collection(db, COL), orderBy('entrada', 'desc'));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return statusFilter ? docs.filter(d => d.status === statusFilter) : docs;
 }
 
 export async function getSessoesHoje() {
@@ -113,12 +101,11 @@ export async function getSessoesHoje() {
 }
 
 export function onSessoesAtivasChange(callback) {
-  const q = query(
-    collection(db, COL),
-    where('status', '==', STATUS_SESSAO.EM_ANDAMENTO),
-    orderBy('entrada', 'desc')
-  );
+  const q = query(collection(db, COL), where('status', '==', STATUS_SESSAO.EM_ANDAMENTO));
   return onSnapshot(q, snap => {
-    callback(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    const docs = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.entrada?.toMillis?.() ?? 0) - (a.entrada?.toMillis?.() ?? 0));
+    callback(docs);
   });
 }

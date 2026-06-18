@@ -2,7 +2,7 @@ import { db } from '../config/firebase.js';
 import { reservarVagaAtomico, updateStatusVaga, STATUS_VAGA } from './vagas.js';
 import {
   collection, doc, addDoc, getDocs, updateDoc,
-  query, where, orderBy, onSnapshot, Timestamp
+  query, where, onSnapshot, Timestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const COL = 'reservas';
@@ -34,25 +34,18 @@ export async function criarReserva({ usuarioId, vagaId, veiculoId }) {
 }
 
 export async function getReservaAtivaDoUsuario(usuarioId) {
-  const q = query(
-    collection(db, COL),
-    where('usuarioId', '==', usuarioId),
-    where('status', '==', STATUS_RESERVA.ATIVA)
-  );
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const d = snap.docs[0];
-  return { id: d.id, ...d.data() };
+  const snap = await getDocs(query(collection(db, COL), where('usuarioId', '==', usuarioId)));
+  const ativa = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .find(d => d.status === STATUS_RESERVA.ATIVA);
+  return ativa ?? null;
 }
 
 export async function getReservasDoUsuario(usuarioId) {
-  const q = query(
-    collection(db, COL),
-    where('usuarioId', '==', usuarioId),
-    orderBy('criadoEm', 'desc')
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(query(collection(db, COL), where('usuarioId', '==', usuarioId)));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.criadoEm?.toMillis?.() ?? 0) - (a.criadoEm?.toMillis?.() ?? 0));
 }
 
 export async function cancelarReserva(reservaId, vagaId) {

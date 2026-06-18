@@ -1,6 +1,6 @@
 import { db } from '../config/firebase.js';
 import {
-  collection, addDoc, getDocs, query, where, orderBy, Timestamp
+  collection, addDoc, getDocs, query, where, Timestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const COL = 'pagamentos';
@@ -20,23 +20,19 @@ export async function registrarPagamento({ sessaoId, usuarioId, valor, metodo })
 }
 
 export async function getPagamentosDoUsuario(usuarioId) {
-  const q = query(
-    collection(db, COL),
-    where('usuarioId', '==', usuarioId),
-    orderBy('criadoEm', 'desc')
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(query(collection(db, COL), where('usuarioId', '==', usuarioId)));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.criadoEm?.toMillis?.() ?? 0) - (a.criadoEm?.toMillis?.() ?? 0));
 }
 
 export async function getFaturamentoHoje() {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
-  const q = query(
-    collection(db, COL),
-    where('criadoEm', '>=', Timestamp.fromDate(hoje)),
-    where('status', '==', STATUS_PAGAMENTO.APROVADO)
-  );
+  const q = query(collection(db, COL), where('criadoEm', '>=', Timestamp.fromDate(hoje)));
   const snap = await getDocs(q);
-  return snap.docs.reduce((sum, d) => sum + (d.data().valor || 0), 0);
+  return snap.docs
+    .map(d => d.data())
+    .filter(d => d.status === STATUS_PAGAMENTO.APROVADO)
+    .reduce((sum, d) => sum + (d.valor || 0), 0);
 }
