@@ -23,11 +23,13 @@ export async function addMensalista({ usuarioId, veiculoId, plano, vencimento })
 }
 
 export async function getMensalistas(statusFilter) {
-  const q = (statusFilter && statusFilter !== 'all')
-    ? query(collection(db, COL), where('status', '==', statusFilter), orderBy('vencimento'))
-    : query(collection(db, COL), orderBy('vencimento'));
+  const q = query(collection(db, COL));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  if (statusFilter && statusFilter !== 'all') {
+    docs = docs.filter(d => d.status === statusFilter);
+  }
+  return docs.sort((a, b) => (a.vencimento?.toMillis?.() ?? 0) - (b.vencimento?.toMillis?.() ?? 0));
 }
 
 export async function updateMensalista(id, data) {

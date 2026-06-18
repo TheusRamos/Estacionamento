@@ -66,6 +66,11 @@ export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
 }
 
+export async function getClientes() {
+  const snap = await getDocs(query(collection(db, 'usuarios'), where('tipo', '==', 'cliente')));
+  return snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+}
+
 export async function loginWithGoogle() {
   const provider = new GoogleAuthProvider();
   const credential = await signInWithPopup(auth, provider);

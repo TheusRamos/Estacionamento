@@ -9,10 +9,11 @@ const CLIENT_NAV = [
 ];
 
 const ADMIN_NAV = [
-  { href: 'admin-home.html',        icon: 'dashboard',       label: 'Dashboard',     section: 'Painel' },
-  { href: 'admin-entrada.html',     icon: 'swap_horiz',      label: 'Entrada / Saída' },
+  { href: 'admin-home.html',        icon: 'dashboard',       label: 'Dashboard',       section: 'Painel' },
+  { href: 'admin-entrada.html',     icon: 'swap_horiz',      label: 'Entrada / Saída', section: 'Operação' },
   { href: 'admin-mensalistas.html', icon: 'card_membership', label: 'Mensalistas' },
-  { href: 'admin-setores.html',     icon: 'grid_view',       label: 'Setores e Vagas', section: 'Gestão' },
+  { href: 'admin-clientes.html',    icon: 'people',          label: 'Clientes',        section: 'Gestão' },
+  { href: 'admin-setores.html',     icon: 'grid_view',       label: 'Setores e Vagas' },
   { href: 'admin-tarifas.html',     icon: 'payments',        label: 'Tarifas' },
   { href: 'admin-sessoes.html',     icon: 'receipt_long',    label: 'Sessões' },
 ];
@@ -43,7 +44,7 @@ function buildNav(items) {
 }
 
 function setUserInfo(user) {
-  const roles = { cliente: 'Cliente', administrador: 'Administrador', operador: 'Operador' };
+  const roles = { cliente: 'Cliente', admin: 'Administrador', administrador: 'Administrador', operador: 'Operador' };
   const name  = document.getElementById('sidebar-user-name');
   const role  = document.getElementById('sidebar-user-role');
   const av    = document.getElementById('sidebar-avatar');
@@ -118,7 +119,7 @@ export function initLayout({ title = 'Estacionamento' } = {}) {
         }
 
         ready = true;
-        const isAdmin = userData.tipo === 'administrador' || userData.tipo === 'operador';
+        const isAdmin = userData.tipo === 'admin' || userData.tipo === 'administrador' || userData.tipo === 'operador';
         buildNav(isAdmin ? ADMIN_NAV : CLIENT_NAV);
         setUserInfo(userData);
         resolve(userData);

@@ -28,15 +28,15 @@ export async function getVagas() {
 }
 
 export async function getVagasBySetor(setorId) {
-  const q = query(collection(db, COL), where('setorId', '==', setorId), orderBy('codigo'));
+  const q = query(collection(db, COL), where('setorId', '==', setorId));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => a.codigo.localeCompare(b.codigo));
 }
 
 export async function getVagasLivres() {
-  const q = query(collection(db, COL), where('status', '==', STATUS_VAGA.LIVRE), orderBy('codigo'));
+  const q = query(collection(db, COL), where('status', '==', STATUS_VAGA.LIVRE));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => a.codigo.localeCompare(b.codigo));
 }
 
 export async function updateVaga(id, data) {

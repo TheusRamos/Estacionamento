@@ -1027,6 +1027,8 @@ select.form-control {
 .list-item:last-child { border-bottom: none; }
 .list-item:hover { background: var(--color-surface); }
 
+.list-item--stacked { align-items: flex-start; }
+
 .list-item__icon {
   width: 44px;
   height: 44px;
@@ -1418,6 +1420,14 @@ select.form-control {
   color: white;
 }
 
+.chip--sm {
+  height: 24px;
+  padding: 0 var(--space-2);
+  font-size: 11px;
+  gap: var(--space-1);
+  cursor: default;
+}
+
 /* ============================================================
    TOAST
    ============================================================ */
@@ -1629,7 +1639,8 @@ select.form-control {
   color: var(--color-on-primary-muted);
 }
 
-.avatar--lg { width: 56px; height: 56px; font-size: var(--font-size-xl); }
+.avatar--lg  { width: 56px; height: 56px; font-size: var(--font-size-xl); }
+.avatar--xl  { width: 72px; height: 72px; font-size: var(--font-size-2xl); }
 
 /* ============================================================
    SPOTS FILTER / RESERVATION PANEL
@@ -1750,7 +1761,15 @@ select.form-control {
 .text-muted   { color: var(--color-text-secondary); }
 .text-danger  { color: var(--color-danger); }
 .text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
 .text-primary { color: var(--color-primary); }
+
+.countdown {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
 .text-accent  { color: var(--color-accent-dim); }
 .text-bold    { font-weight: var(--font-weight-bold); }
 .text-medium  { font-weight: var(--font-weight-medium); }

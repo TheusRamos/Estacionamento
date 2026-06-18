@@ -62,6 +62,12 @@ export async function expirarReserva(reservaId, vagaId) {
   await updateStatusVaga(vagaId, STATUS_VAGA.LIVRE);
 }
 
+export async function getReservasAtivas() {
+  const q = query(collection(db, COL), where('status', '==', STATUS_RESERVA.ATIVA));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
 export async function countReservasAtivas() {
   const q = query(collection(db, COL), where('status', '==', STATUS_RESERVA.ATIVA));
   const snap = await getDocs(q);
