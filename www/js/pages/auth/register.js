@@ -12,9 +12,7 @@ export function initRegister() {
   setupLiveValidation();
 
   document.getElementById('go-to-login')?.addEventListener('click', () => {
-    clearAllErrors();
-    document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-    document.getElementById('page-login')?.classList.add('active');
+    window.location.href = 'index.html';
   });
 
   const form   = document.getElementById('form-register');
@@ -74,8 +72,7 @@ export function initRegister() {
     setButtonLoading(btnReg, true);
     try {
       await registerUser({ nome, email, telefone: tel, senha });
-      showToast('Conta criada com sucesso!', 'success');
-      // onAuthChange cuida do redirecionamento
+      window.location.href = 'client-home.html';
     } catch (err) {
       const msg = firebaseErrorMsg(err.code) || err.message;
       showToast(msg, 'error');

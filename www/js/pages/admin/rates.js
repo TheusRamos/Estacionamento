@@ -1,6 +1,6 @@
 import { showToast } from '../../components/toast.js';
 import { openModal, confirmModal } from '../../components/modal.js';
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { onTarifasChange, addTarifa, updateTarifa, deleteTarifa } from '../../services/tarifas.js';
 import { esc, formatCurrency, tipoTarifaLabel } from '../../utils.js';
 

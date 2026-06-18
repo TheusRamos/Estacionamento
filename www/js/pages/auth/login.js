@@ -1,11 +1,24 @@
-import { loginUser, loginWithGoogle } from '../../services/auth.js';
+import { loginUser, loginWithGoogle, onAuthChange, getCurrentUserData } from '../../services/auth.js';
 import { showToast } from '../../components/toast.js';
 import { setButtonLoading } from '../../components/loader.js';
 
+function redirectUser(tipo) {
+  const dest = (tipo === 'administrador' || tipo === 'operador')
+    ? 'admin-home.html'
+    : 'client-home.html';
+  window.location.href = dest;
+}
+
 export function initLogin() {
-  const form     = document.getElementById('form-login');
-  const btnLogin = document.getElementById('btn-login');
-  const btnGoogle = document.getElementById('btn-google-login');
+  // Auto-redirect if already logged in
+  const unsub = onAuthChange(async firebaseUser => {
+    unsub();
+    if (!firebaseUser) return;
+    try {
+      const userData = await getCurrentUserData();
+      if (userData) redirectUser(userData.tipo);
+    } catch (_) {}
+  });
 
   // Toggle senha
   document.getElementById('toggle-login-password')?.addEventListener('click', function () {
@@ -17,14 +30,16 @@ export function initLogin() {
 
   // Ir para cadastro
   document.getElementById('go-to-register')?.addEventListener('click', () => {
-    clearErrors();
-    document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-    document.getElementById('page-register')?.classList.add('active');
+    window.location.href = 'cadastro.html';
   });
 
   // Limpa erro ao digitar
   document.getElementById('login-email')?.addEventListener('input', () => clearFieldError('login-email', 'login-email-error'));
   document.getElementById('login-password')?.addEventListener('input', () => clearFieldError('login-password', 'login-password-error'));
+
+  const form     = document.getElementById('form-login');
+  const btnLogin = document.getElementById('btn-login');
+  const btnGoogle = document.getElementById('btn-google-login');
 
   // Login com e-mail
   form?.addEventListener('submit', async e => {
@@ -41,12 +56,11 @@ export function initLogin() {
 
     setButtonLoading(btnLogin, true);
     try {
-      await loginUser(email, senha);
-      // onAuthChange em app.js cuida do redirecionamento
+      const userData = await loginUser(email, senha);
+      redirectUser(userData.tipo);
     } catch (err) {
       const msg = firebaseErrorMsg(err.code) || err.message;
       showToast(msg, 'error');
-    } finally {
       setButtonLoading(btnLogin, false);
     }
   });
@@ -55,13 +69,12 @@ export function initLogin() {
   btnGoogle?.addEventListener('click', async () => {
     setButtonLoading(btnGoogle, true);
     try {
-      await loginWithGoogle();
-      // onAuthChange cuida do redirecionamento
+      const userData = await loginWithGoogle();
+      redirectUser(userData.tipo);
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
         showToast(err.message, 'error');
       }
-    } finally {
       setButtonLoading(btnGoogle, false);
     }
   });

@@ -30,11 +30,12 @@ export function openModal({ title, body, actions = [], onClose } = {}) {
   `;
 
   const close = () => {
+    if (overlay.classList.contains('closing')) return;
     overlay.classList.add('closing');
-    overlay.addEventListener('animationend', () => {
-      overlay.remove();
-      onClose?.();
-    }, { once: true });
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; overlay.remove(); onClose?.(); };
+    overlay.addEventListener('animationend', done, { once: true });
+    setTimeout(done, 300);
   };
 
   overlay.querySelector('.modal__close').addEventListener('click', close);

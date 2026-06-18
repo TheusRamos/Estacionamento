@@ -26,7 +26,10 @@ export function showToast(message, type = 'info', duration = 3500) {
 
   const remove = () => {
     toast.classList.add('removing');
-    toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; toast.remove(); };
+    toast.addEventListener('animationend', done, { once: true });
+    setTimeout(done, 300);
   };
 
   setTimeout(remove, duration);

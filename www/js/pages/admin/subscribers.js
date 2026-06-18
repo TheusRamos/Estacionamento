@@ -1,6 +1,6 @@
 import { showToast } from '../../components/toast.js';
 import { openModal, confirmModal } from '../../components/modal.js';
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import {
   onMensalistasChange,
   addMensalista,

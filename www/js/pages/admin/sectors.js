@@ -1,6 +1,6 @@
 import { showToast } from '../../components/toast.js';
 import { openModal, confirmModal } from '../../components/modal.js';
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { onSetoresChange, addSetor, updateSetor, deleteSetor } from '../../services/setores.js';
 import { onVagasChange, addVaga, updateVaga, deleteVaga } from '../../services/vagas.js';
 import { esc, tipoVagaLabel } from '../../utils.js';
@@ -17,6 +17,7 @@ export function initAdminSectors(user) {
 
   document.getElementById('btn-add-sector')?.addEventListener('click', () => openSectorModal());
   document.getElementById('btn-add-sector-empty')?.addEventListener('click', () => openSectorModal());
+  document.getElementById('btn-seed-matrix')?.addEventListener('click', gerarMatrizPadrao);
 
   unsubSectors = onSetoresChange(setores => {
     allSetores = setores;
@@ -39,14 +40,21 @@ function render() {
     container.innerHTML = `
       <div class="empty-state">
         <span class="material-symbols-rounded empty-state__icon">grid_view</span>
-        <p class="empty-state__title">Nenhum setor</p>
-        <p class="empty-state__text">Adicione setores para organizar as vagas do estacionamento.</p>
-        <button class="btn btn--primary mt-4" id="btn-add-sector-empty-inner">
-          <span class="material-symbols-rounded">add</span>
-          Novo setor
-        </button>
+        <p class="empty-state__title">Nenhum setor cadastrado</p>
+        <p class="empty-state__text">Crie setores manualmente ou gere a matriz padrão de 3 fileiras × 16 vagas.</p>
+        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;justify-content:center;margin-top:var(--space-5)">
+          <button class="btn btn--secondary" id="btn-add-sector-empty-inner">
+            <span class="material-symbols-rounded">add</span>
+            Novo setor
+          </button>
+          <button class="btn btn--primary" id="btn-seed-matrix-empty">
+            <span class="material-symbols-rounded">auto_awesome</span>
+            Gerar matriz padrão
+          </button>
+        </div>
       </div>`;
     document.getElementById('btn-add-sector-empty-inner')?.addEventListener('click', () => openSectorModal());
+    document.getElementById('btn-seed-matrix-empty')?.addEventListener('click', gerarMatrizPadrao);
     return;
   }
 
@@ -117,6 +125,51 @@ function render() {
     const setor = allSetores.find(s => s.id === vaga.setorId);
     btn.addEventListener('click', () => openSpotModal(vaga.setorId, setor?.nome || '', vaga));
   });
+}
+
+// ─── Gerar Matriz Padrão ─────────────────────────────────────────────
+
+async function gerarMatrizPadrao() {
+  if (allSetores.length > 0) {
+    showToast('Já existem setores cadastrados. Exclua todos antes de gerar a matriz padrão.', 'warning');
+    return;
+  }
+
+  const ok = await confirmModal({
+    title: 'Gerar matriz padrão',
+    message: 'Serão criados 3 setores (Fileira A, B e C) com 16 vagas cada, totalizando 48 vagas. Continuar?',
+    confirmLabel: 'Gerar',
+    confirmClass: 'btn--primary'
+  });
+  if (!ok) return;
+
+  const btn = document.getElementById('btn-seed-matrix');
+  if (btn) btn.disabled = true;
+  showToast('Gerando matriz padrão… Aguarde.', 'info', 15000);
+
+  try {
+    const fileiras = [
+      { nome: 'Fileira A', letra: 'A' },
+      { nome: 'Fileira B', letra: 'B' },
+      { nome: 'Fileira C', letra: 'C' },
+    ];
+
+    for (const { nome, letra } of fileiras) {
+      const setorRef = await addSetor({ nome, totalVagas: 16 });
+      const vagaPromises = [];
+      for (let n = 1; n <= 16; n++) {
+        const codigo = `${letra}-${String(n).padStart(2, '0')}`;
+        vagaPromises.push(addVaga({ codigo, setorId: setorRef.id, tipo: 'comum' }));
+      }
+      await Promise.all(vagaPromises);
+    }
+
+    showToast('Matriz padrão criada! 3 setores × 16 vagas = 48 vagas.', 'success', 5000);
+  } catch (err) {
+    showToast('Erro ao gerar matriz: ' + err.message, 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 // ─── Modal Setor ─────────────────────────────────────────────────────

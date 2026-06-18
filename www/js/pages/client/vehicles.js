@@ -1,4 +1,4 @@
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { showToast } from '../../components/toast.js';
 import { setButtonLoading } from '../../components/loader.js';
 import { openModal, confirmModal } from '../../components/modal.js';

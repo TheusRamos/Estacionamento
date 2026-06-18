@@ -1,4 +1,4 @@
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { showToast } from '../../components/toast.js';
 import { onVagasChange } from '../../services/vagas.js';
 import { getSessaoAtivaDoUsuario, getSessoesDoUsuario } from '../../services/sessoes.js';
@@ -15,13 +15,13 @@ export async function initClientDashboard(user) {
   document.getElementById('client-name').textContent = user.nome.split(' ')[0];
   // Navegação rápida
   document.getElementById('quick-reserve')?.addEventListener('click', () => {
-    document.getElementById('client-bottom-nav')?.querySelector('[data-tab="client-spots"]')?.click();
+    window.location.href = 'client-vagas.html';
   });
   document.getElementById('quick-vehicles')?.addEventListener('click', () => {
-    document.getElementById('client-bottom-nav')?.querySelector('[data-tab="client-vehicles"]')?.click();
+    window.location.href = 'client-veiculos.html';
   });
   document.getElementById('quick-history')?.addEventListener('click', () => {
-    document.getElementById('client-bottom-nav')?.querySelector('[data-tab="client-sessions"]')?.click();
+    window.location.href = 'client-historico.html';
   });
 
   // Botão cancelar reserva

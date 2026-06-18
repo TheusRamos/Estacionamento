@@ -1,11 +1,11 @@
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { showToast } from '../../components/toast.js';
 import { setButtonLoading } from '../../components/loader.js';
 import { onVagasChange } from '../../services/vagas.js';
 import { onSetoresChange } from '../../services/setores.js';
 import { criarReserva } from '../../services/reservas.js';
 import { getVeiculosDoUsuario } from '../../services/veiculos.js';
-import { esc, tipoVagaLabel } from '../../utils.js';
+import { esc } from '../../utils.js';
 
 let allVagas   = [];
 let allSetores = [];
@@ -117,7 +117,6 @@ function renderSpots() {
     return;
   }
 
-  // Agrupa por setor
   const bySetor = {};
   filtered.forEach(v => {
     const key = v.setorId || 'sem-setor';
@@ -125,22 +124,59 @@ function renderSpots() {
     bySetor[key].push(v);
   });
 
+  let globalIdx = 0;
+
   container.innerHTML = Object.entries(bySetor).map(([setorId, vagas]) => {
     const setor = allSetores.find(s => s.id === setorId);
     const livres = vagas.filter(v => v.status === 'livre').length;
+
+    // Divide em linhas de 8 vagas
+    const rows = [];
+    for (let i = 0; i < vagas.length; i += 8) {
+      const row = vagas.slice(i, i + 8);
+      while (row.length < 8) row.push(null); // padding
+      rows.push(row);
+    }
+
+    let matrixHtml = '';
+    for (let r = 0; r < rows.length; r++) {
+      // Gap entre pares de fileiras (a cada 2 linhas)
+      if (r > 0 && r % 2 === 0) {
+        matrixHtml += `<div class="parking-gap"></div>`;
+      }
+      // Faixa de circulação entre as 2 linhas de cada fileira
+      if (r % 2 === 1) {
+        matrixHtml += `
+          <div class="parking-lane">
+            <span class="material-symbols-rounded parking-lane__arrow">arrow_back</span>
+            <span class="parking-lane__label">Faixa de circulação</span>
+            <span class="material-symbols-rounded parking-lane__arrow">arrow_forward</span>
+          </div>`;
+      }
+
+      const position = r % 2 === 0 ? 'top' : 'bottom';
+      const rowHtml = rows[r].map(v => {
+        const delay = globalIdx++ * 28;
+        return v
+          ? spotCell(v, delay, position)
+          : `<div class="spot-cell spot-cell--empty" style="animation-delay:${delay}ms"></div>`;
+      }).join('');
+
+      matrixHtml += `<div class="parking-row parking-row--${position}">${rowHtml}</div>`;
+    }
+
     return `
       <div class="sector-block">
         <div class="sector-block__header">
           <span class="sector-block__name">${esc(setor?.nome || 'Sem setor')}</span>
-          <span class="sector-block__count">${livres} livre${livres !== 1 ? 's' : ''}</span>
+          <span class="sector-block__count">${livres}/${vagas.length} livres</span>
         </div>
-        <div class="spots-grid">
-          ${vagas.map(v => spotCell(v)).join('')}
+        <div class="parking-matrix">
+          <div class="parking-matrix__inner">${matrixHtml}</div>
         </div>
       </div>`;
   }).join('');
 
-  // Event delegation para seleção
   container.querySelectorAll('.spot-cell--livre').forEach(cell => {
     cell.addEventListener('click', () => {
       container.querySelectorAll('.spot-cell').forEach(c => c.classList.remove('spot-cell--selected'));
@@ -150,14 +186,14 @@ function renderSpots() {
   });
 }
 
-function spotCell(v) {
+function spotCell(v, delay, position) {
   const setor = allSetores.find(s => s.id === v.setorId);
   return `
-    <div class="spot-cell spot-cell--${v.status} ${v.id === selectedVagaId ? 'spot-cell--selected' : ''}"
-         data-vaga-id="${v.id}" data-codigo="${esc(v.codigo)}" data-setor="${esc(setor?.nome || '')}">
-      <span class="material-symbols-rounded" style="font-size:18px">${spotIcon(v.tipo)}</span>
+    <div class="spot-cell spot-cell--${v.status} spot-cell--${position} ${v.id === selectedVagaId ? 'spot-cell--selected' : ''}"
+         data-vaga-id="${v.id}" data-codigo="${esc(v.codigo)}" data-setor="${esc(setor?.nome || '')}"
+         style="animation-delay:${delay}ms">
+      <span class="material-symbols-rounded spot-cell__icon">${spotIcon(v.tipo)}</span>
       <span class="spot-cell__code">${esc(v.codigo)}</span>
-      <span class="spot-cell__type">${tipoVagaLabel(v.tipo)}</span>
     </div>`;
 }
 

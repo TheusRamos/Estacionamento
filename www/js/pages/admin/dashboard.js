@@ -1,4 +1,4 @@
-import { registerUnsub } from '../../app.js';
+import { registerUnsub } from '../../unsubs.js';
 import { onVagasChange } from '../../services/vagas.js';
 import { onSessoesAtivasChange } from '../../services/sessoes.js';
 import { countReservasAtivas } from '../../services/reservas.js';
