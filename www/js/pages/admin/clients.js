@@ -1,5 +1,5 @@
 import { db } from '../../config/firebase.js';
-import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { getClientes } from '../../services/auth.js';
 import { showToast } from '../../components/toast.js';
 import { openModal } from '../../components/modal.js';

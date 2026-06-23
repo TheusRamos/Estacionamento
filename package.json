@@ -15,14 +15,20 @@
     "firebase": "^10.12.2"
   },
   "devDependencies": {
+    "cordova-android": "^15.0.0",
+    "cordova-plugin-network-information": "^3.1.0",
+    "cordova-plugin-splashscreen": "^6.0.1",
+    "cordova-plugin-statusbar": "^4.0.0",
     "esbuild": "^0.21.5"
   },
   "cordova": {
-    "platforms": ["android", "ios"],
-    "plugins": [
-      "cordova-plugin-network-information",
-      "cordova-plugin-statusbar",
-      "cordova-plugin-splashscreen"
-    ]
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-splashscreen": {}
+    }
   }
 }

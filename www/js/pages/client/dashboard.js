@@ -5,6 +5,7 @@ import { getSessaoAtivaDoUsuario, getSessoesDoUsuario } from '../../services/ses
 import { getReservaAtivaDoUsuario, cancelarReserva } from '../../services/reservas.js';
 import { calcularValorSessao, getTarifas } from '../../services/tarifas.js';
 import { db } from '../../config/firebase.js';
+import { getDoc, doc } from 'firebase/firestore';
 import { formatCurrency, formatDuration } from '../../utils.js';
 
 let timerInterval = null;
@@ -144,10 +145,8 @@ async function handleCancelReservation() {
   }
 }
 
-// Helper local para buscar um doc do Firestore sem importar tudo
 async function getFirestoreDoc(colecao, id) {
   if (!id) return null;
-  const { getDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
   const snap = await getDoc(doc(db, colecao, id));
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }

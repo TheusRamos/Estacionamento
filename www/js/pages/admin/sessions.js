@@ -6,7 +6,7 @@ import { showToast } from '../../components/toast.js';
 import { db } from '../../config/firebase.js';
 import {
   doc, getDoc, updateDoc
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 import { esc, formatDateTime, formatCurrency, formatDuration, sessionStatusBadge } from '../../utils.js';
 
 let currentFilter = 'all';
