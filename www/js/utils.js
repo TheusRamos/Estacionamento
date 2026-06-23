@@ -79,3 +79,17 @@ export function tipoTarifaLabel(tipo) {
   const map = { hora: 'Por hora', diaria: 'Diária', mensal: 'Mensal' };
   return map[tipo] || tipo;
 }
+
+/**
+ * Executa fn após o app estar pronto.
+ * Em Cordova aguarda deviceready; no browser aguarda DOMContentLoaded.
+ */
+export function onReady(fn) {
+  if (typeof window.cordova !== 'undefined') {
+    document.addEventListener('deviceready', fn, false);
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    fn();
+  }
+}

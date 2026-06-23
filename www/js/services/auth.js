@@ -6,7 +6,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+} from 'firebase/auth';
 import {
   doc,
   setDoc,
@@ -15,12 +15,8 @@ import {
   collection,
   where,
   getDocs
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
-/**
- * Registra novo usuário como cliente.
- * Valida duplicidade de telefone.
- */
 export async function registerUser({ nome, email, telefone, senha }) {
   const q = query(collection(db, 'usuarios'), where('telefone', '==', telefone));
   const snap = await getDocs(q);
@@ -39,9 +35,6 @@ export async function registerUser({ nome, email, telefone, senha }) {
   return credential.user;
 }
 
-/**
- * Realiza login e retorna dados do Firestore.
- */
 export async function loginUser(email, senha) {
   const credential = await signInWithEmailAndPassword(auth, email, senha);
   const uid = credential.user.uid;
@@ -72,6 +65,9 @@ export async function getClientes() {
 }
 
 export async function loginWithGoogle() {
+  if (typeof window.cordova !== 'undefined') {
+    throw new Error('Login com Google não está disponível na versão mobile.');
+  }
   const provider = new GoogleAuthProvider();
   const credential = await signInWithPopup(auth, provider);
   const user = credential.user;

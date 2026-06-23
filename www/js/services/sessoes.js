@@ -4,7 +4,7 @@ import { calcularValorSessao } from './tarifas.js';
 import {
   collection, doc, addDoc, getDocs, getDoc, updateDoc,
   query, where, orderBy, onSnapshot, Timestamp
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
 const COL = 'sessoes';
 

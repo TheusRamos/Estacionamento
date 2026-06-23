@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap:; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://*.firebaseapp.com https://*.firebaseio.com wss://*.firebaseio.com;" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -75,16 +76,7 @@
   </div>
 </main>
 
-<script type="module">
-  import { initLayout } from './js/layout.js';
-  import { initAdminRates } from './js/pages/admin/rates.js';
-  initLayout({ title: 'Tarifas' }).then(user => {
-    document.getElementById('topbar-actions').innerHTML =
-      `<button class="icon-btn" id="btn-add-rate" title="Nova tarifa">
-        <span class="material-symbols-rounded">add</span>
-      </button>`;
-    initAdminRates(user);
-  }).catch(() => {});
-</script>
+<script src="cordova.js"></script>
+<script src="js/dist/admin-tarifas.js"></script>
 </body>
 </html>

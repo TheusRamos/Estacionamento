@@ -1,6 +1,6 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth }       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { initializeApp } from 'firebase/app';
+import { initializeAuth, browserLocalPersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey:            "AIzaSyA3KSrOpU3FW_ektyPLD7ChPcETR6LOb3M",
@@ -12,5 +12,7 @@ const firebaseConfig = {
 };
 
 export const app  = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence
+});
 export const db   = getFirestore(app);

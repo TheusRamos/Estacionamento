@@ -4,16 +4,22 @@
   "description": "Sistema de gerenciamento de estacionamento",
   "main": "index.js",
   "scripts": {
-    "android": "cordova run android",
-    "ios": "cordova run ios",
-    "build": "cordova build",
+    "bundle": "node build.js",
+    "bundle:watch": "node build.js --watch",
+    "android": "npm run bundle && cordova run android",
+    "ios": "npm run bundle && cordova run ios",
+    "build": "npm run bundle && cordova build",
     "serve": "cordova serve"
+  },
+  "dependencies": {
+    "firebase": "^10.12.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.5"
   },
   "cordova": {
     "platforms": ["android", "ios"],
     "plugins": [
-      "cordova-plugin-camera",
-      "cordova-plugin-geolocation",
       "cordova-plugin-network-information",
       "cordova-plugin-statusbar",
       "cordova-plugin-splashscreen"
