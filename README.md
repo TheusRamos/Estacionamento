@@ -21,6 +21,7 @@ Plataforma web responsiva para gestão completa de estacionamento, com dois perf
 | Banco de dados | Firebase Firestore (NoSQL, tempo real) |
 | Autenticação | Firebase Authentication (e-mail/senha + Google) |
 | Hospedagem | Firebase Hosting (compatível) |
+| Mobile | Apache Cordova (Android/iOS) |
 | Fonte | Inter (Google Fonts) |
 | Ícones | Material Symbols Rounded |
 
@@ -43,9 +44,14 @@ www/
 ├── admin-home.html             # Dashboard do administrador
 ├── admin-entrada.html          # Registro de entrada e saída
 ├── admin-mensalistas.html      # Gestão de mensalistas
+├── admin-clientes.html         # Listagem e detalhes de clientes cadastrados
 ├── admin-setores.html          # Setores e vagas (CRUD + geração de matriz padrão)
 ├── admin-tarifas.html          # Cadastro e edição de tarifas
 ├── admin-sessoes.html          # Histórico de todas as sessões
+│
+├── assets/
+│   └── images/
+│       └── qrcode.jpeg
 │
 ├── css/
 │   ├── variables.css           # Design tokens (cores, espaçamentos, tipografia)
@@ -55,8 +61,8 @@ www/
 │
 └── js/
     ├── layout.js               # Guard de autenticação + sidebar + topbar (compartilhado)
-    ├── unsubs.js               # Registro de unsubscribes Firestore (limpeza ao sair)
-    ├── utils.js                # Funções utilitárias (formatação, badges, escape)
+    ├── unsubs.js               # Registro de listeners Firestore (limpeza no beforeunload)
+    ├── utils.js                # Funções utilitárias: formatação, badges, escape, onReady
     │
     ├── config/
     │   └── firebase.js         # Inicialização do Firebase (app, auth, db)
@@ -66,8 +72,23 @@ www/
     │   ├── toast.js            # Notificações toast
     │   └── loader.js           # Controle de loading em botões
     │
+    ├── entries/                # Ponto de entrada de cada página HTML (thin wrappers)
+    │   ├── login.js
+    │   ├── register.js
+    │   ├── client-home.js
+    │   ├── client-vagas.js
+    │   ├── client-veiculos.js
+    │   ├── client-historico.js
+    │   ├── admin-home.js
+    │   ├── admin-entrada.js
+    │   ├── admin-mensalistas.js
+    │   ├── admin-clientes.js
+    │   ├── admin-setores.js
+    │   ├── admin-tarifas.js
+    │   └── admin-sessoes.js
+    │
     ├── services/               # Camada de acesso ao Firestore
-    │   ├── auth.js             # Login, cadastro, Google OAuth, onAuthChange
+    │   ├── auth.js             # Login, cadastro, Google OAuth, onAuthChange, getClientes
     │   ├── vagas.js            # CRUD de vagas + reserva/ocupação atômica
     │   ├── setores.js          # CRUD de setores
     │   ├── tarifas.js          # CRUD de tarifas
@@ -92,6 +113,7 @@ www/
             ├── sectors.js      # Setores e vagas (inclui geração de matriz padrão)
             ├── rates.js        # Tarifas
             ├── subscribers.js  # Mensalistas
+            ├── clients.js      # Listagem de clientes com veículos e sessões
             └── sessions.js     # Sessões (visão admin)
 ```
 
@@ -108,6 +130,7 @@ www/
 ### Administrador / Operador
 - Dashboard com ocupação em tempo real (círculo de porcentagem + estatísticas)
 - Registra entrada e saída de veículos (busca por placa)
+- Visualiza clientes cadastrados com veículos, sessões e reservas ativas
 - Gerencia setores e vagas (criar, editar, excluir; geração de matriz padrão)
 - Define tarifas (por hora, diária, mensalidade)
 - Controla mensalistas e suas vigências
@@ -176,4 +199,4 @@ Paleta **Deep Navy × Safety Yellow** inspirada em sinalização viária:
 | Fonte | Inter | Toda a interface |
 | Ícones | Material Symbols Rounded | Toda a interface |
 
-Layout responsivo: sidebar fixa no desktop (264px), drawer no mobile. Footer fixo na base. Topbar fixa de 80px.
+Layout responsivo: sidebar fixa no desktop (264px), drawer no mobile. Footer fixo na base (`--footer-height: 52px`). Topbar fixa de 80px.
