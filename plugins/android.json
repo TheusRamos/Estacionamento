@@ -1,0 +1,36 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-camera": {
+      "ANDROIDX_CORE_VERSION": "1.6.+",
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.estacionamento.app"
+    },
+    "cordova-plugin-googleplus": {
+      "PLAY_SERVICES_VERSION": "15.0.1",
+      "PACKAGE_NAME": "com.estacionamento.app"
+    }
+  },
+  "dependent_plugins": {}
+}

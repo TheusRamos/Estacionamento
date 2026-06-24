@@ -3,7 +3,7 @@
     <name>Estacionamento</name>
     <description>Sistema de gerenciamento de estacionamento</description>
     <author email="contato@estacionamento.com" href="https://estacionamento.com">Estacionamento App</author>
-    <content src="www/index.html" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

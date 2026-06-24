@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "102641635598",
+    "project_id": "estacionamento-fbcee",
+    "storage_bucket": "estacionamento-fbcee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102641635598:android:ecbf60e9cfd613f516475f",
+        "android_client_info": {
+          "package_name": "com.estacionamento.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102641635598-h14vkfpnag0k9cc6squhc4jjhudst1pf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.estacionamento.app",
+            "certificate_hash": "61ea731145e339d33a764b028df688589a59dce1"
+          }
+        },
+        {
+          "client_id": "102641635598-54r3e4cltlv02jan9haah5h3emevdshf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTddkNfrmyn3qF7y0_5jfePGmIj-SPhsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102641635598-54r3e4cltlv02jan9haah5h3emevdshf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

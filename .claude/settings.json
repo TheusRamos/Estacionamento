@@ -3,7 +3,15 @@
     "allow": [
       "Read(//c/Program Files/**)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\www\" -Recurse | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\\", \"\"\\) })",
-      "PowerShell(Get-ChildItem -Recurse -Path \"c:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\" | Where-Object { !$_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)"
+      "PowerShell(Get-ChildItem -Recurse -Path \"c:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\" | Where-Object { !$_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)",
+      "PowerShell(head -20)",
+      "PowerShell(cd \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\"; Get-ChildItem node_modules | Where-Object { $_.Name -match '^[024]$' } | Select-Object Name)",
+      "PowerShell(\\(Get-Command cordova\\).Source)",
+      "Read(//c/Users/mathe/AppData/Roaming/npm/node_modules/cordova/node_modules/cordova-lib/src/cordova/**)",
+      "PowerShell(keytool -list -v -keystore \"$env:USERPROFILE\\\\.android\\\\debug.keystore\" -alias androiddebugkey -storepass android -keypass android 2>&1 | Select-String \"SHA1\")",
+      "PowerShell(Copy-Item \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\platforms\\\\android\\\\app\\\\google-services.json\" \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\google-services.json\")",
+      "PowerShell($json = Get-Content \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\google-services.json\" | ConvertFrom-Json; $json.client.oauth_client | Where-Object { $_.client_type -eq 3 } | Select-Object client_id)",
+      "PowerShell($json = Get-Content \"C:\\\\Users\\\\mathe\\\\Documents\\\\Code\\\\Estacionamento\\\\google-services.json\" | ConvertFrom-Json; $json.client.oauth_client | Where-Object { $_.client_type -eq 1 } | Select-Object client_id)"
     ],
     "additionalDirectories": [
       "C:\\Users\\mathe\\Documents\\Code\\Estacionamento\\www",
