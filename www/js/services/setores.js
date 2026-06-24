@@ -2,7 +2,7 @@ import { db } from '../config/firebase.js';
 import {
   collection, doc, addDoc, getDocs, updateDoc, deleteDoc,
   onSnapshot, query, orderBy
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
 const COL = 'setores';
 

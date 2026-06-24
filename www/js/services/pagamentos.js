@@ -1,7 +1,7 @@
 import { db } from '../config/firebase.js';
 import {
   collection, addDoc, getDocs, query, where, Timestamp
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
 const COL = 'pagamentos';
 

@@ -37,9 +37,30 @@ export function initLogin() {
   document.getElementById('login-email')?.addEventListener('input', () => clearFieldError('login-email', 'login-email-error'));
   document.getElementById('login-password')?.addEventListener('input', () => clearFieldError('login-password', 'login-password-error'));
 
-  const form     = document.getElementById('form-login');
-  const btnLogin = document.getElementById('btn-login');
+  const form      = document.getElementById('form-login');
+  const btnLogin  = document.getElementById('btn-login');
   const btnGoogle = document.getElementById('btn-google-login');
+  const divider   = document.querySelector('.auth-divider');
+
+  // Google Sign-in não funciona em Cordova (sem suporte a popup)
+  if (typeof window.cordova !== 'undefined') {
+    btnGoogle?.remove();
+    divider?.remove();
+  } else {
+    // Login com Google
+    btnGoogle?.addEventListener('click', async () => {
+      setButtonLoading(btnGoogle, true);
+      try {
+        const userData = await loginWithGoogle();
+        redirectUser(userData.tipo);
+      } catch (err) {
+        if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+          showToast(err.message, 'error');
+        }
+        setButtonLoading(btnGoogle, false);
+      }
+    });
+  }
 
   // Login com e-mail
   form?.addEventListener('submit', async e => {
@@ -65,6 +86,7 @@ export function initLogin() {
     }
   });
 
+<<<<<<< HEAD
   // Login com Google via InAppBrowser (Cordova detecta automaticamente)
   btnGoogle?.addEventListener('click', async () => {
     setButtonLoading(btnGoogle, true);
@@ -78,6 +100,8 @@ export function initLogin() {
       setButtonLoading(btnGoogle, false);
     }
   });
+=======
+>>>>>>> 100a5d01e4cd8728354777d995f0bd977d7e3a92
 }
 
 function setFieldError(inputId, errorId, msg) {

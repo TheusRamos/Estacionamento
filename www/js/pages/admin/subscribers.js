@@ -12,7 +12,7 @@ import { esc, formatDate, mensalistaStatusBadge } from '../../utils.js';
 import { db } from '../../config/firebase.js';
 import {
   collection, getDocs, query, where
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
 let allSubscribers = [];
 let currentFilter  = 'all';

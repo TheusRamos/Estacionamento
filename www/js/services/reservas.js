@@ -3,7 +3,7 @@ import { reservarVagaAtomico, updateStatusVaga, STATUS_VAGA } from './vagas.js';
 import {
   collection, doc, addDoc, getDocs, updateDoc,
   query, where, onSnapshot, Timestamp
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
 const COL = 'reservas';
 const EXPIRACAO_MINUTOS = 30;
